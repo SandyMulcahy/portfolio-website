@@ -1,0 +1,449 @@
+@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap%27);
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+html{
+    font-size: 62.5%;
+    scroll-snap-type: y mandatory;
+}
+
+body{
+    width: 100%;
+    height: 100vh;
+    overflow-x: hidden;
+    background-color: black;
+    color:white
+}
+
+header{
+    margin-top: 20px;
+    position:fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem 9%;
+    background-color: transparent;
+    filter: drop-shadow(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo{
+    font-size: 4rem;
+    color: turquoise;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+.logo:hover{
+    transform: scale(1.1);
+}
+
+nav a{
+    font-size: 1.8rem;
+    color: white;
+    margin-left: 4rem;
+    font-weight: 500;
+    transition: 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+nav a:hover,
+nav a.active{
+    color:turquoise;
+    border-bottom: 3px solid turquoise
+}
+
+@media(max-width:800px){
+    nav{
+        position: absolute;
+        display: none;
+        top: 100%;
+        right: 0;
+        width: 40%;
+        border-left: 3px solid turquoise;
+        border-bottom: 3px solid turquoise;
+        border-bottom-left-radius: 2rem;
+        padding: 1rem solid;
+        background-color: black;
+        border-top: 0.1rem solid turquoise;
+    }
+
+    nav.active{
+        display: block;
+    }
+
+    nav a{
+        display: block;
+        font-size: 2rem;
+        margin: 3rem 0;
+    }
+
+    nav a:hover,
+    nav a.active{
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-bottom: 0.5rem solid turquoise;
+    }
+}
+
+section{
+    min-height: 100vh;
+    padding: 5rem 9% 5rem;
+    scroll-snap-align: start
+}
+
+.home{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8rem;
+    background-color: black;
+}
+
+.home-content h1{
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+span{
+    color: turquoise;
+}
+
+.home-content h3{
+    font-size: 6rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.home-content p{
+    font-size: 2rem;
+    font-weight: 300;
+}
+
+.home-img{
+    border-radius: 50%;
+}
+
+.home-img img{
+    position: relative;
+    width: 32vw;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+
+.home-img img:hover{
+    transform: scale(1.05);
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+.fa,.bi{
+    color:white;
+}
+
+.social-icons a{
+    color: white;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 5rem;
+    height: 5rem;
+    background-color: transparent;
+    border: 0.2rem solid white;
+    font-size: 2rem;
+    border-radius: 50%;
+    margin: 3rem 1.5rem 3rem;
+    transition: 0.3s ease;
+}
+
+.social-icons a:hover{
+    border: solid turquoise;
+    transform: scale(1.3) translateY(-5px);
+    background-color: turquoise;
+    box-shadow: 0 0 10px turquoise;
+}
+
+.btn{
+    display: inline-block;
+    margin-left: 1.5rem;
+    padding: 1rem 2.8rem;
+    background-color: black;
+    border-radius: 4rem;
+    font-size: 2.1rem;
+    color: turquoise;
+    letter-spacing: 0.3rem;
+    font-weight: 600;
+    border: 2px solid turquoise;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.btn:hover{
+    transform: scale3d(1.03);
+    background-color: turquoise;
+    color:black;
+    box-shadow: 0 0 10px turquoise;
+
+}
+
+.btn1{
+    display: inline-block;
+    padding: 1rem 2.8rem;
+    background-color: black;
+    border-radius: 4rem;
+    font-size: 2.5rem;
+    color: turquoise;
+    letter-spacing: 0.3rem;
+    font-weight: 600;
+    border: 2px solid turquoise;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.btn1:hover{
+    transform: scale3d(1.03);
+    background-color: turquoise;
+    color:black;
+    box-shadow: 0 0 10px turquoise;
+
+}
+
+.typing-text{
+    font-size: 34px;
+    font-weight: 600;
+    min-width: 280px;
+}
+
+.typing-text span{
+    position: relative;
+}
+
+.typing-text span::before{
+    content: "Student";
+    animation: words 10s infinite;
+}
+
+.typing-text span::after{
+    content : "";
+    background-color: black;
+    position: absolute;
+    width: calc(100% + 8px);
+    height: 100%;
+    border-left: 3px solid black;
+    right: -8;
+    animation: cursor 0.6s infinite;
+}
+
+@keyframes cursor{
+    to{
+        border-left: 3px solid turquoise;
+    }
+}
+
+@keyframes words{
+    0%,30%{
+        content: "Student";
+    }
+    30%,60%{
+        content: "Developer";
+    }
+    60%,100%{
+        content: "Web Designer";
+    }
+}
+
+@media(max-width: 1000px){
+    .home{
+        gap: 4rem;
+    }
+}
+
+@media(max-width: 1330px){
+    .home{
+        flex-direction: column;
+        margin: 5rem 4rem;
+    }
+}
+
+@media(max-width: 1050px){
+    .about-img{
+        display: none;
+    }
+    .about-content{
+        flex-direction: horizontal;
+    }
+    .about-languages{
+        padding-left: 3rem;
+    }
+}
+
+@media(max-width: 650px){
+    .about{
+        flex-direction: column;
+        margin: 5rem 4rem;
+    }
+    .about-languages{
+        padding-top: 3rem;
+    }
+}
+
+@media(max-width:800px){
+    .typing-text span::after{
+        animation: none;
+        color: transparent
+    }
+    @keyframes words{
+        0%,30%{
+            content: "Student";
+        }
+        30%,60%{
+            content: "Developer";
+        }
+        60%,100%{
+            content: "WebDesigner";
+        }
+    }
+}
+
+.about-img{
+    border-radius: 50%;
+}
+
+.about-img img{
+    position: relative;
+    width: 32vw;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s linear;
+    transform: scale(0.5)
+}
+
+.about-img img:hover{
+    transform: scale(0.53);
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+.about{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+}
+
+.about-content h1{
+    font-size: 6rem;
+    font-weight: 700;
+    line-height: 2;
+    padding-bottom: 1rem;
+}
+
+.about-content p{
+    font-size: 1.8rem;
+    font-weight: 300;
+    padding-bottom: 4rem;
+}
+
+.about-languages p{
+    font-size: 4.5rem;
+    font-weight: 300;
+    letter-spacing: 0.3rem;
+    color: white;
+    padding: 0.5rem;
+    transition-duration: 0.5s;
+}
+
+.about-languages p:hover{
+    color: turquoise;
+}
+
+.projects .content p{
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 4rem;
+}
+
+
+
+.projects .title{
+    font-size: 6rem;
+    font-weight: 700;
+    line-height: 1.3;
+    padding-top: 5%;
+    padding-bottom: 1%;
+    text-align: center;
+}
+
+.boxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.boxes .box{
+    margin: 20px;
+    width: calc(100%/3 - 50px);
+    min-width: 300px;
+    text-align: center;
+    border-radius: 12px;
+    padding: 30px 10px;
+    box-shadow: 0 5px 10px turquoise;
+    cursor: default;
+    color: rgba(255, 255, 255, 0.6);
+    transition: 0.7s ease;
+    align-items: center;
+}
+
+.boxes .box:hover{
+    box-shadow: 0 15px 30px turquoise;
+    color: white;
+}
+
+.boxes .box .title{
+    font-size: 3rem;
+    font-weight: 500;
+    padding-bottom: 4rem;
+}
+
+.boxes .box p{
+    font-size: 2rem;
+    font-weight: 300;
+    padding-bottom: 4rem;
+}
+
+.boxes .box p{
+    line-height: 3rem;
+}
+
+.boxes .box a{
+    display: block;
+    width:100px;
+    height: 100px;
+
+}
+
+
+@media(max-width: 1200px){
+    .boxes .box{
+        width: calc(100%/2 - 50px);
+    }
+}
+@media(max-width: 830px){
+    .boxes .box{
+        width: calc(100% - 50px);
+    }
+}
