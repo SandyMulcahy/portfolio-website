@@ -298,12 +298,24 @@ span{
     .about-languages{
         padding-top: 3rem;
     }
+
+    .home{
+        flex-direction: column;
+        margin: none;
+    }
+
+    .home-img{
+        margin-top: 15%;
+    }
 }
 
 @media(max-width:800px){
     .typing-text span::after{
         animation: none;
-        color: transparent
+        color: transparent;
+
+        background-color: transparent;
+        background: transparent;
     }
     @keyframes words{
         0%,30%{
@@ -313,7 +325,7 @@ span{
             content: "Developer";
         }
         60%,100%{
-            content: "WebDesigner";
+            content: "Web Designer";
         }
     }
 }
