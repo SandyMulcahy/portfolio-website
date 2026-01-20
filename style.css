@@ -61,6 +61,15 @@ nav a.active{
 }
 
 @media(max-width:800px){
+
+    .logo {
+        display:none;
+    }
+
+    html {
+        scroll-snap-type: none;
+    }
+
     nav{
         position: absolute;
         display: none;
