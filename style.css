@@ -418,7 +418,7 @@ span{
 }
 
 
-.projects .title{
+.projects .title {
     font-size: 6rem;
     font-weight: 700;
     line-height: 1.3;
@@ -448,9 +448,10 @@ span{
     align-items: center;
 }
 
-.boxes .box:hover{
+.box:hover{
     box-shadow: 0 15px 30px turquoise;
     color: white;
+    
 }
 
 .boxes .box .title{
@@ -470,10 +471,14 @@ span{
 }
 
 .boxes .box a{
-    display: block;
-    width:100px;
-    height: 100px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    padding-bottom: 4rem;
+    color: rgba(255, 255, 255, 0.6);
+}
 
+.boxes .box a:hover{
+    color: turquoise;
 }
 
 
