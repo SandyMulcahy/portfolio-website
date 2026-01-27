@@ -149,12 +149,6 @@ span{
     transition: 0.2s linear;
 }
 
-.home-img img:hover{
-    transform: scale(1.05);
-    font-size: 1.8rem;
-    font-weight: 500;
-}
-
 .fa,.bi{
     color:white;
 }
@@ -238,36 +232,23 @@ span{
 
 .typing-text span::before{
     content: "Student";
-    animation: words 10s infinite;
+    animation: words 9s infinite;
 }
 
 .typing-text span::after{
-    content : "";
-    background-color: black;
-    position: absolute;
-    width: calc(100% + 8px);
-    height: 100%;
-    border-left: 3px solid black;
-    right: -8;
-    animation: cursor 0.6s infinite;
+    content: "";
+    border-right: 2px solid white;
+    animation: cursor 0.8s steps(1) infinite;
 }
 
-@keyframes cursor{
-    to{
-        border-left: 3px solid turquoise;
-    }
+@keyframes cursor {
+    50% { opacity: 0; }
 }
 
-@keyframes words{
-    0%,30%{
-        content: "Student";
-    }
-    30%,60%{
-        content: "Developer";
-    }
-    60%,100%{
-        content: "Web Designer";
-    }
+@keyframes words {
+    0%   { content: "Student"; }
+    33%  { content: "Developer"; }
+    66%  { content: "Web Designer"; }
 }
 
 @media(max-width: 1000px){
