@@ -3,32 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sandy Mulcahy — Computer Science undergraduate at Oriel College, University of Oxford. Projects, experience and code.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <title>Sandy Portfolio</title>
+    <title>Sandy Mulcahy — Portfolio</title>
 </head>
 <body>
     <header>
-        <a href="#" class="logo">Sandy Mulcahy</a>
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#about" >About</a>
-            <a href="#projects" >Projects</a>
-            <a href="https://sandymulcahy.github.io/sandysgames/"> Games</a>
+        <a href="#home" class="logo">Sandy Mulcahy</a>
+        <nav id="nav">
+            <a href="#home" class="active">Home</a>
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="https://sandymulcahy.github.io/sandysgames/">Games</a>
         </nav>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav">
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </header>
+
     <section class="home" id="home">
         <div class="home-img">
-            <img src="images/me.png">
+            <img src="images/me-circle.png" alt="Sandy Mulcahy">
         </div>
         <div class="home-content">
-            <h1>Hi, I'm  <span>Sandy</span></h1>
+            <h1>Hi, I'm <span>Sandy</span></h1>
             <h3 class="typing-text"><span></span></h3>
             <p>I am an undergraduate at Oriel College, University of Oxford studying Computer Science in my second year. I'm enthusiastic about developing code to solve problems and have been developing my skills through projects and internships.</p>
-            <div class= "social-icons">
-                <a href="https://www.linkedin.com/in/alexander-mulcahy-257362282/"><i class="fa-brands fa-linkedin"></i></a>
-                <a href="https://github.com/SandyMulcahy"><i class="fa-brands fa-github"></i></a>
-                <a href="https://www.facebook.com/sandy.mulcahy.338"><i class="fa-brands fa-facebook"></i></a>
+            <div class="social-icons">
+                <a href="https://www.linkedin.com/in/alexander-mulcahy-257362282/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://github.com/SandyMulcahy" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://www.facebook.com/sandy.mulcahy.338" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
             </div>
             <a href="mailto:alexandermulcahy2005@gmail.com" class="btn">Contact Me</a>
         </div>
@@ -40,7 +48,7 @@
             <p>I like coding things for fun. Ever since learning a bit of Python in secondary school, I have been developing my programming skills through lots of mini solo projects.
             <br>I'm fascinated about the theory behind games, and a lot of my first programs were platforms for playing card games on a computer or simulations to work out optimal strategy.
             <br>I am now at the University of Oxford studying Computer Science, where have been building my experience with internships and larger scale projects.</p>
-            <a href="AlexanderMulcahy-CV.pdf" class="btn1">DOWNLOAD CV</a>
+            <a href="AlexanderMulcahy-CV.pdf" class="btn1">Download CV</a>
         </div>
         <div class="about-img">
             <img src="images/laptop.png" alt="">
@@ -60,7 +68,7 @@
             <p>Can be found on my GitHub</p>
             <div class="boxes">
                 <div class="box">
-                    <div class = "title">RISK Game</div>
+                    <div class="title">RISK Game</div>
                     <p>I developed a fully functioning multi-player RISK platform which allowed users to design and create their own personalised maps to play against others locally.</p>
                     <a href="https://github.com/SandyMulcahy/risk-game" target="_blank" rel="noopener noreferrer">View Project</a>
                 </div>
@@ -68,13 +76,11 @@
                     <div class="title">Connect4 CPU</div>
                     <p>I implemented the Minimax algorithm from game theory to make a recursion-driven CPU opponent for a simple game of Connect4.</p>
                     <a href="https://github.com/SandyMulcahy/connect4-minimax" target="_blank" rel="noopener noreferrer">View Project</a>
-                
                 </div>
                 <div class="box">
                     <div class="title">Quill Project</div>
-                    <p>I worked with the Quill Project in Oxford to redesign and code a new staff page for their website. I gathered user requirements and iterated designs before implementation </p>
+                    <p>I worked with the Quill Project in Oxford to redesign and code a new staff page for their website. I gathered user requirements and iterated designs before implementation.</p>
                     <a href="https://github.com/SandyMulcahy/quillpage" target="_blank" rel="noopener noreferrer">View Project</a>
-                
                 </div>
                 <div class="box">
                     <div class="title">Neural Network</div>
@@ -82,13 +88,59 @@
                 </div>
                 <div class="box">
                     <div class="title">Sandys Games</div>
-                    <p>I created a website with a daily 5x5 crossword, which tracks users scores in a dynamic leaderboard.</p>
-                    <a href="https://sandysgames.vercel.app" target="_blank" rel="noopener noreferrer">View Project</a>
-                    
+                    <p>I created a website with a daily 5x5 crossword, which tracks users scores in a dynamic leaderboard. (Just need to figure out free backend hosting)</p>
+                    <a href="https://sandymulcahy.github.io/sandysgames" target="_blank" rel="noopener noreferrer">Will be up soon</a>
                 </div>
-
             </div>
         </div>
     </section>
+
+    <script>
+        const header = document.querySelector('header');
+        const nav = document.getElementById('nav');
+        const toggle = document.getElementById('menu-toggle');
+        const navLinks = nav.querySelectorAll('a[href^="#"]');
+        const sections = [...navLinks].map(a => document.querySelector(a.getAttribute('href')));
+
+        const setMenu = (open) => {
+            nav.classList.toggle('active', open);
+            toggle.setAttribute('aria-expanded', String(open));
+            toggle.innerHTML = open
+                ? '<i class="fa-solid fa-xmark"></i>'
+                : '<i class="fa-solid fa-bars"></i>';
+        };
+
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setMenu(!nav.classList.contains('active'));
+        });
+
+        nav.addEventListener('click', () => setMenu(false));
+
+        document.addEventListener('click', (e) => {
+            if (!header.contains(e.target)) setMenu(false);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') setMenu(false);
+        });
+
+        const onScroll = () => {
+            header.classList.toggle('scrolled', window.scrollY > 40);
+
+            let current = sections[0];
+            for (const section of sections) {
+                if (section && section.getBoundingClientRect().top <= window.innerHeight * 0.4) {
+                    current = section;
+                }
+            }
+            navLinks.forEach(link =>
+                link.classList.toggle('active', current && link.getAttribute('href') === '#' + current.id)
+            );
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    </script>
 </body>
 </html>
