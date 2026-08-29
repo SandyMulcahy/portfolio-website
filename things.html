@@ -1,0 +1,285 @@
+<title>Sandy's Things</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+  /* ---------- tokens: page chrome (theme-aware) ---------- */
+  :root{
+    --ground:      #EAE7E1;
+    --ground-lift: #F4F2ED;
+    --ink:         #2A2724;
+    --ink-soft:    #6F6960;
+    --hair:        rgba(42,39,36,.16);
+    --hair-soft:   rgba(42,39,36,.08);
+    --focus:       #2A2724;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:      #131211;
+      --ground-lift: #1C1A18;
+      --ink:         #EFECE6;
+      --ink-soft:    #8B847A;
+      --hair:        rgba(239,236,230,.18);
+      --hair-soft:   rgba(239,236,230,.08);
+      --focus:       #EFECE6;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:      #131211;
+    --ground-lift: #1C1A18;
+    --ink:         #EFECE6;
+    --ink-soft:    #8B847A;
+    --hair:        rgba(239,236,230,.18);
+    --hair-soft:   rgba(239,236,230,.08);
+    --focus:       #EFECE6;
+  }
+
+  /* ---------- tokens: destination brands (fixed in both themes) ---------- */
+  :root{
+    /* sandys.games — Daily 5x5 */
+    --g-1:      #f5f7fa;
+    --g-2:      #c3cfe2;
+    --g-2-deep: #aebdd5;
+    --g-ink:    #374151;
+    --g-soft:   #6b7280;
+    --g-hair:   #d1d5db;
+    --g-accent: #059669;
+    /* recipetap.food */
+    --r-bg:     #A9431F;
+    --r-lift:   #BC5330;
+    --r-deep:   #8E3617;
+    --r-ink:    #ffffff;
+    --r-muted:  rgba(255,255,255,.66);
+    --r-line:   rgba(255,255,255,.24);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+    font-variation-settings:"wdth" 100;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .frame{
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    gap:clamp(14px,2vh,22px);
+    padding:clamp(16px,2.4vw,30px);
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    flex:none;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:20px;
+    padding-inline:2px;
+  }
+  .wordmark{
+    font-size:clamp(38px,6.4vw,76px);
+    font-weight:800;
+    font-variation-settings:"wdth" 112,"wght" 800;
+    letter-spacing:-.035em;
+    line-height:.86;
+    text-wrap:balance;
+  }
+  .byline{
+    font-family:"Courier Prime","Courier New",monospace;
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    padding-bottom:.3em;
+  }
+
+  /* ---------- the rack ---------- */
+  .rack{
+    flex:1 1 auto;
+    display:grid;
+    grid-template-columns:1fr 2fr 1fr;
+    gap:clamp(10px,1.4vw,18px);
+    min-height:0;
+  }
+
+  .panel{
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:18px;
+    padding:clamp(18px,2vw,30px);
+    text-decoration:none;
+    border-radius:2px;
+    isolation:isolate;
+    opacity:0;
+    transform:translateY(14px);
+    animation:settle .62s cubic-bezier(.22,.7,.3,1) forwards;
+  }
+  .panel:nth-child(1){animation-delay:.04s}
+  .panel:nth-child(2){animation-delay:.14s}
+  .panel:nth-child(3){animation-delay:.24s}
+  @keyframes settle{to{opacity:1;transform:none}}
+
+  .panel:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+
+  .p-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .p-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+  .p-arrow{
+    font-size:15px;line-height:1;
+    transition:transform .3s cubic-bezier(.22,.7,.3,1);
+  }
+  .panel:hover .p-arrow,.panel:focus-visible .p-arrow{transform:translate(3px,-3px)}
+
+  .p-mark{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:0;padding:6px 0}
+  .p-name{
+    font-size:clamp(21px,2.5vw,34px);
+    font-weight:700;
+    font-variation-settings:"wdth" 104,"wght" 700;
+    letter-spacing:-.02em;
+    line-height:1;
+  }
+  .p-domain{
+    margin-top:8px;
+    font-size:12px;
+    letter-spacing:.06em;
+  }
+
+  /* ---------- panel: Daily 5x5 ---------- */
+  .p--games{
+    background:linear-gradient(135deg,var(--g-1) 0%,var(--g-2) 100%);
+    color:var(--g-ink);
+    border:1px solid var(--g-hair);
+  }
+  .p--games::before{
+    content:"";position:absolute;inset:0;z-index:-1;
+    background:linear-gradient(135deg,var(--g-1) 0%,var(--g-2-deep) 100%);
+    opacity:0;transition:opacity .4s ease;
+  }
+  .p--games:hover::before,.p--games:focus-visible::before{opacity:1}
+  .p--games .p-label,.p--games .p-domain{
+    font-family:"Courier Prime","Courier New",monospace;
+    color:var(--g-soft);
+  }
+  .p--games .p-arrow{color:var(--g-soft)}
+
+  .grid5{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    width:min(100%,180px);
+    aspect-ratio:1;
+    border:1.5px solid var(--g-ink);
+    background:var(--g-ink);
+    gap:1.5px;
+  }
+  .grid5 i{background:var(--g-1)}
+  .grid5 i.blk{background:var(--g-ink)}
+  .grid5 i.sol{background:var(--g-accent)}
+
+  /* ---------- panel: RecipeTap ---------- */
+  .p--recipes{
+    background:var(--r-bg);
+    color:var(--r-ink);
+    border:1px solid var(--r-deep);
+    transition:background-color .4s ease;
+  }
+  .p--recipes:hover,.p--recipes:focus-visible{background:var(--r-lift)}
+  .p--recipes .p-label{color:var(--r-muted);letter-spacing:.22em}
+  .p--recipes .p-domain{color:var(--r-muted)}
+  .p--recipes .p-arrow{color:var(--r-muted)}
+
+  .stack{width:min(100%,180px);display:flex;flex-direction:column;gap:15px}
+  .stack span{display:flex;align-items:center;gap:11px}
+  .stack span::before{
+    content:"";flex:none;width:7px;height:7px;border-radius:50%;
+    border:1.5px solid var(--r-line);
+  }
+  .stack span::after{content:"";height:1px;background:var(--r-line)}
+  .stack span:nth-child(1)::after{width:100%}
+  .stack span:nth-child(2)::after{width:62%}
+  .stack span:nth-child(3)::after{width:84%}
+  .stack span:nth-child(4)::after{width:44%}
+  .stack span:nth-child(2)::before{background:var(--r-line)}
+
+  /* ---------- panel: the empty slot ---------- */
+  .p--empty{
+    background:var(--ground-lift);
+    border:1px solid var(--hair);
+  }
+  .p--empty::after{
+    content:"";position:absolute;inset:clamp(12px,1.4vw,20px);
+    border:1px solid var(--hair-soft);
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:860px){
+    .rack{
+      grid-template-columns:1fr;
+      grid-template-rows:minmax(240px,1fr) minmax(120px,.5fr) minmax(240px,1fr);
+    }
+    .p-mark{padding:14px 0}
+    .grid5,.stack{width:min(100%,150px)}
+  }
+  @media (max-width:460px){
+    .masthead{flex-direction:column;align-items:flex-start;gap:6px}
+    .byline{padding-bottom:0}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .panel{animation:none;opacity:1;transform:none}
+    .p-arrow{transition:none}
+  }
+</style>
+
+<main class="frame">
+  <header class="masthead">
+    <h1 class="wordmark">Things</h1>
+    <p class="byline">Sandy Mulcahy</p>
+  </header>
+
+  <div class="rack">
+
+    <a class="panel p--games" href="https://sandys.games" target="_blank" rel="noopener">
+      <div class="p-top">
+        <span class="p-label">Daily puzzle</span>
+        <span class="p-arrow" aria-hidden="true">&#8599;</span>
+      </div>
+      <div class="p-mark">
+        <div class="grid5" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i class="blk"></i>
+          <i></i><i></i><i class="sol"></i><i></i><i></i>
+          <i></i><i></i><i></i><i></i><i></i>
+          <i></i><i></i><i></i><i></i><i></i>
+          <i class="blk"></i><i></i><i></i><i></i><i></i>
+        </div>
+      </div>
+      <div>
+        <div class="p-name">Daily 5&#215;5</div>
+        <div class="p-domain">sandys.games</div>
+      </div>
+    </a>
+
+    <div class="panel p--empty" aria-hidden="true"></div>
+
+    <a class="panel p--recipes" href="https://recipetap.food" target="_blank" rel="noopener">
+      <div class="p-top">
+        <span class="p-label">Recipes</span>
+        <span class="p-arrow" aria-hidden="true">&#8599;</span>
+      </div>
+      <div class="p-mark">
+        <div class="stack" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div>
+        <div class="p-name">RecipeTap</div>
+        <div class="p-domain">recipetap.food</div>
+      </div>
+    </a>
+
+  </div>
+</main>
