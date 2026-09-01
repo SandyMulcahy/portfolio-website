@@ -10,6 +10,14 @@
     --hair:        rgba(42,39,36,.16);
     --hair-soft:   rgba(42,39,36,.08);
     --focus:       #2A2724;
+    /* the clock's road surface */
+    --road:        #F1EFEA;
+    --lane:        rgba(42,39,36,.055);
+    --lane-line:   rgba(42,39,36,.13);
+    --manhole:     rgba(42,39,36,.16);
+    --manhole-in:  rgba(42,39,36,.09);
+    --car-glass:   rgba(28,30,36,.80);
+    --car-shadow:  rgba(42,39,36,.20);
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -20,35 +28,29 @@
       --hair:        rgba(239,236,230,.18);
       --hair-soft:   rgba(239,236,230,.08);
       --focus:       #EFECE6;
+      --road:        #191817;
+      --lane:        rgba(239,236,230,.05);
+      --lane-line:   rgba(239,236,230,.11);
+      --manhole:     rgba(239,236,230,.15);
+      --manhole-in:  rgba(239,236,230,.08);
+      --car-glass:   rgba(16,17,20,.82);
+      --car-shadow:  rgba(0,0,0,.38);
     }
   }
   :root[data-theme="dark"]{
-    --ground:      #131211;
-    --ground-lift: #1C1A18;
-    --ink:         #EFECE6;
-    --ink-soft:    #8B847A;
-    --hair:        rgba(239,236,230,.18);
-    --hair-soft:   rgba(239,236,230,.08);
-    --focus:       #EFECE6;
+    --ground:#131211; --ground-lift:#1C1A18; --ink:#EFECE6; --ink-soft:#8B847A;
+    --hair:rgba(239,236,230,.18); --hair-soft:rgba(239,236,230,.08); --focus:#EFECE6;
+    --road:#191817; --lane:rgba(239,236,230,.05); --lane-line:rgba(239,236,230,.11);
+    --manhole:rgba(239,236,230,.15); --manhole-in:rgba(239,236,230,.08);
+    --car-glass:rgba(16,17,20,.82); --car-shadow:rgba(0,0,0,.38);
   }
 
   /* ---------- tokens: destination brands (fixed in both themes) ---------- */
   :root{
-    /* sandys.games — Daily 5x5 */
-    --g-1:      #f5f7fa;
-    --g-2:      #c3cfe2;
-    --g-2-deep: #aebdd5;
-    --g-ink:    #374151;
-    --g-soft:   #6b7280;
-    --g-hair:   #d1d5db;
-    --g-accent: #059669;
-    /* recipetap.food */
-    --r-bg:     #A9431F;
-    --r-lift:   #BC5330;
-    --r-deep:   #8E3617;
-    --r-ink:    #ffffff;
-    --r-muted:  rgba(255,255,255,.66);
-    --r-line:   rgba(255,255,255,.24);
+    --g-1:#f5f7fa; --g-2:#c3cfe2; --g-2-deep:#aebdd5;
+    --g-ink:#374151; --g-soft:#6b7280; --g-hair:#d1d5db; --g-accent:#059669;
+    --r-bg:#A9431F; --r-lift:#BC5330; --r-deep:#8E3617;
+    --r-ink:#ffffff; --r-muted:rgba(255,255,255,.66); --r-line:rgba(255,255,255,.24);
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -69,91 +71,54 @@
     padding:clamp(16px,2.4vw,30px);
   }
 
-  /* ---------- masthead ---------- */
   .masthead{
-    flex:none;
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    gap:20px;
-    padding-inline:2px;
+    flex:none;display:flex;align-items:baseline;justify-content:space-between;
+    gap:20px;padding-inline:2px;
   }
   .wordmark{
-    font-size:clamp(38px,6.4vw,76px);
-    font-weight:800;
+    font-size:clamp(38px,6.4vw,76px);font-weight:800;
     font-variation-settings:"wdth" 112,"wght" 800;
-    letter-spacing:-.035em;
-    line-height:.86;
-    text-wrap:balance;
+    letter-spacing:-.035em;line-height:.86;text-wrap:balance;
   }
   .byline{
-    font-family:"Courier Prime","Courier New",monospace;
-    font-size:12px;
-    letter-spacing:.16em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    white-space:nowrap;
-    padding-bottom:.3em;
+    font-family:"Courier Prime","Courier New",monospace;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);
+    white-space:nowrap;padding-bottom:.3em;
   }
 
-  /* ---------- the rack ---------- */
   .rack{
-    flex:1 1 auto;
-    display:grid;
-    grid-template-columns:1fr 2fr 1fr;
-    gap:clamp(10px,1.4vw,18px);
-    min-height:0;
+    flex:1 1 auto;display:grid;grid-template-columns:1fr 2fr 1fr;
+    gap:clamp(10px,1.4vw,18px);min-height:0;
   }
 
   .panel{
-    position:relative;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    gap:18px;
-    padding:clamp(18px,2vw,30px);
-    text-decoration:none;
-    border-radius:2px;
-    isolation:isolate;
-    opacity:0;
-    transform:translateY(14px);
+    position:relative;overflow:hidden;display:flex;flex-direction:column;
+    justify-content:space-between;gap:18px;padding:clamp(18px,2vw,30px);
+    text-decoration:none;border-radius:2px;isolation:isolate;
+    opacity:0;transform:translateY(14px);
     animation:settle .62s cubic-bezier(.22,.7,.3,1) forwards;
   }
   .panel:nth-child(1){animation-delay:.04s}
   .panel:nth-child(2){animation-delay:.14s}
   .panel:nth-child(3){animation-delay:.24s}
   @keyframes settle{to{opacity:1;transform:none}}
-
   .panel:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 
   .p-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
   .p-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase}
-  .p-arrow{
-    font-size:15px;line-height:1;
-    transition:transform .3s cubic-bezier(.22,.7,.3,1);
-  }
+  .p-arrow{font-size:15px;line-height:1;transition:transform .3s cubic-bezier(.22,.7,.3,1)}
   .panel:hover .p-arrow,.panel:focus-visible .p-arrow{transform:translate(3px,-3px)}
-
   .p-mark{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:0;padding:6px 0}
   .p-name{
-    font-size:clamp(21px,2.5vw,34px);
-    font-weight:700;
-    font-variation-settings:"wdth" 104,"wght" 700;
-    letter-spacing:-.02em;
-    line-height:1;
+    font-size:clamp(21px,2.5vw,34px);font-weight:700;
+    font-variation-settings:"wdth" 104,"wght" 700;letter-spacing:-.02em;line-height:1;
   }
-  .p-domain{
-    margin-top:8px;
-    font-size:12px;
-    letter-spacing:.06em;
-  }
+  .p-domain{margin-top:8px;font-size:12px;letter-spacing:.06em}
 
   /* ---------- panel: Daily 5x5 ---------- */
   .p--games{
     background:linear-gradient(135deg,var(--g-1) 0%,var(--g-2) 100%);
-    color:var(--g-ink);
-    border:1px solid var(--g-hair);
+    color:var(--g-ink);border:1px solid var(--g-hair);
   }
   .p--games::before{
     content:"";position:absolute;inset:0;z-index:-1;
@@ -162,19 +127,12 @@
   }
   .p--games:hover::before,.p--games:focus-visible::before{opacity:1}
   .p--games .p-label,.p--games .p-domain{
-    font-family:"Courier Prime","Courier New",monospace;
-    color:var(--g-soft);
+    font-family:"Courier Prime","Courier New",monospace;color:var(--g-soft);
   }
   .p--games .p-arrow{color:var(--g-soft)}
-
   .grid5{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    width:min(100%,180px);
-    aspect-ratio:1;
-    border:1.5px solid var(--g-ink);
-    background:var(--g-ink);
-    gap:1.5px;
+    display:grid;grid-template-columns:repeat(5,1fr);width:min(100%,180px);aspect-ratio:1;
+    border:1.5px solid var(--g-ink);background:var(--g-ink);gap:1.5px;
   }
   .grid5 i{background:var(--g-1)}
   .grid5 i.blk{background:var(--g-ink)}
@@ -182,16 +140,12 @@
 
   /* ---------- panel: RecipeTap ---------- */
   .p--recipes{
-    background:var(--r-bg);
-    color:var(--r-ink);
-    border:1px solid var(--r-deep);
+    background:var(--r-bg);color:var(--r-ink);border:1px solid var(--r-deep);
     transition:background-color .4s ease;
   }
   .p--recipes:hover,.p--recipes:focus-visible{background:var(--r-lift)}
   .p--recipes .p-label{color:var(--r-muted);letter-spacing:.22em}
-  .p--recipes .p-domain{color:var(--r-muted)}
-  .p--recipes .p-arrow{color:var(--r-muted)}
-
+  .p--recipes .p-domain,.p--recipes .p-arrow{color:var(--r-muted)}
   .stack{width:min(100%,180px);display:flex;flex-direction:column;gap:15px}
   .stack span{display:flex;align-items:center;gap:11px}
   .stack span::before{
@@ -205,21 +159,18 @@
   .stack span:nth-child(4)::after{width:44%}
   .stack span:nth-child(2)::before{background:var(--r-line)}
 
-  /* ---------- panel: the empty slot ---------- */
-  .p--empty{
-    background:var(--ground-lift);
+  /* ---------- panel: the clock ---------- */
+  .p--clock{
+    background:var(--road);
     border:1px solid var(--hair);
+    padding:0;display:block;
   }
-  .p--empty::after{
-    content:"";position:absolute;inset:clamp(12px,1.4vw,20px);
-    border:1px solid var(--hair-soft);
-  }
+  #carclock{display:block;width:100%;height:100%}
 
-  /* ---------- responsive ---------- */
   @media (max-width:860px){
     .rack{
       grid-template-columns:1fr;
-      grid-template-rows:minmax(240px,1fr) minmax(120px,.5fr) minmax(240px,1fr);
+      grid-template-rows:minmax(240px,1fr) minmax(200px,.8fr) minmax(240px,1fr);
     }
     .p-mark{padding:14px 0}
     .grid5,.stack{width:min(100%,150px)}
@@ -228,7 +179,6 @@
     .masthead{flex-direction:column;align-items:flex-start;gap:6px}
     .byline{padding-bottom:0}
   }
-
   @media (prefers-reduced-motion:reduce){
     .panel{animation:none;opacity:1;transform:none}
     .p-arrow{transition:none}
@@ -263,7 +213,9 @@
       </div>
     </a>
 
-    <div class="panel p--empty" aria-hidden="true"></div>
+    <div class="panel p--clock">
+      <canvas id="carclock" role="img" aria-label="Clock"></canvas>
+    </div>
 
     <a class="panel p--recipes" href="https://recipetap.food" target="_blank" rel="noopener">
       <div class="p-top">
@@ -283,3 +235,546 @@
 
   </div>
 </main>
+
+<script>
+/* ============================================================================
+   CAR CLOCK — HH:MM, twenty-eight cars
+
+   Each digit is seven cars parked in a seven-segment layout, seen from above.
+
+              TL              TR      off screen, above
+                  _  1  _
+                2         3
+                  _  4  _
+                5         6
+                  _  7  _
+              BL              BR      off screen, below
+
+   Every car has a fixed route through the ten digits, and the seven routes
+   hand on between cars over six ten-digit cycles, so a nine turning over to a
+   zero costs almost no driving. Trips are a straight run down a lane, or a
+   straight, a quarter circle and another straight; cars reverse where the bay
+   they are leaving points the wrong way, and turn around off screen where
+   nobody can see them. All the cars in a digit pull away at the same moment —
+   separation comes from turning radius and pace, searched per transition.
+
+   Console handles live on window.CarClock.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  /* ---------- one digit's geometry ---------- */
+  var CL = 96, CW = 34, GAP = 28;
+  var XOFF = CL / 2 + CW / 2 + GAP;   // 93 — lanes, a clear GAP from every bay
+  var YSTEP = CW + 2 * GAP + CL;      // 186
+  var H = Math.PI / 2;
+
+  var BAYS = {
+    1:  { x: 0,     y: -YSTEP,     vert: false },
+    2:  { x: -XOFF, y: -YSTEP / 2, vert: true  },
+    3:  { x:  XOFF, y: -YSTEP / 2, vert: true  },
+    4:  { x: 0,     y: 0,          vert: false },
+    5:  { x: -XOFF, y:  YSTEP / 2, vert: true  },
+    6:  { x:  XOFF, y:  YSTEP / 2, vert: true  },
+    7:  { x: 0,     y:  YSTEP,     vert: false },
+    TL: { x: -XOFF, y: -330, vert: true, off: true, dir: -1 },
+    TR: { x:  XOFF, y: -330, vert: true, off: true, dir: -1 },
+    BL: { x: -XOFF, y:  330, vert: true, off: true, dir:  1 },
+    BR: { x:  XOFF, y:  330, vert: true, off: true, dir:  1 }
+  };
+
+  var VIEW_H = 270;        // the display band; past this a car is gone
+  var FADE = 55;           // and it dissolves over this much of the approach
+  var OFF_QUEUE = CL + GAP;
+
+  var CARS = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+  var PALETTE = ['#E23B32', '#2D6FD6', '#F2C41B', '#2FA85B',
+                 '#F07C21', '#8B4FD1', '#E4E6EC'];
+
+  var ROUTES = {
+    A: [ 2, 'TL',   4,   4,   4,   4,   4,   3,  4,  4 ],
+    B: [ 1, 'TR',   1,   1,   2,   2,   2, 'TL', 2,  2 ],
+    C: [ 3,   3,    3,   3,   3,   1,   1,   1,  1,  1 ],
+    D: [ 5, 'BL',   5, 'BL','BL','BL',  5, 'BL', 5,'BL'],
+    E: [ 7, 'BR', 'BR',  6,   6,   6,   6,   6,  6,  6 ],
+    F: [ 6,   6,    7,   7, 'BR',  7,   7, 'BR', 7,  7 ],
+    G: ['TR','TR','TR','TR','TR','TR','TR','TR', 3,  3 ]
+  };
+
+  var TRIO = ['A', 'B', 'C'], PAIR = ['E', 'F'];
+  function roleOf(car, cyc) {
+    var i = TRIO.indexOf(car);
+    if (i >= 0) return TRIO[((i - cyc) % 3 + 3) % 3];
+    i = PAIR.indexOf(car);
+    if (i >= 0) return PAIR[((i - cyc) % 2 + 2) % 2];
+    return car;
+  }
+
+  var TUNING = {
+    speed: 112,          // units per second at pace 1 — deliberately unhurried
+    base: 320,
+    minDur: 700, maxDur: 6500,
+    spinFrac: 0.24
+  };
+
+  /* ---------- four digits across the panel ---------- */
+  var DIG_HW = XOFF + CW / 2;                 // 110
+  var DIG_GAP = 66, COLON_GAP = 128;
+  var PITCH = DIG_HW * 2 + DIG_GAP;           // 294
+  var CX = [];
+  (function () {
+    var span = 4 * DIG_HW * 2 + 2 * DIG_GAP + COLON_GAP;
+    var left = -span / 2 + DIG_HW;
+    CX = [left, left + PITCH, left + PITCH + DIG_HW * 2 + COLON_GAP, 0];
+    CX[3] = CX[2] + PITCH;
+    return CX;
+  })();
+  var WORLD_W = 4 * DIG_HW * 2 + 2 * DIG_GAP + COLON_GAP + 56;
+  var MANHOLE_Y = YSTEP / 2, MANHOLE_R = 27;
+
+  /* ---------- vector odds and ends ---------- */
+  function sgn(v) { return v > .5 ? 1 : v < -.5 ? -1 : 0; }
+  function norm(a) { while (a > Math.PI) a -= 2 * Math.PI; while (a < -Math.PI) a += 2 * Math.PI; return a; }
+  function angOf(v) { return Math.atan2(v.y, v.x); }
+  function dotv(a, b) { return a.x * b.x + a.y * b.y; }
+  function samePlace(p, q) { return Math.abs(p.x - q.x) < .5 && Math.abs(p.y - q.y) < .5; }
+  function offBand(p) { return Math.abs(p.y) > VIEW_H; }
+  function easeInOut(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+
+  function legDirs(A, B) {
+    if (A.vert === B.vert) {
+      var d = A.vert ? { x: 0, y: sgn(B.y - A.y) } : { x: sgn(B.x - A.x), y: 0 };
+      return { d1: d, d2: d, corner: null };
+    }
+    var c = A.vert ? { x: A.x, y: B.y } : { x: B.x, y: A.y };
+    return {
+      d1: A.vert ? { x: 0, y: sgn(c.y - A.y) } : { x: sgn(c.x - A.x), y: 0 },
+      d2: B.vert ? { x: 0, y: sgn(B.y - c.y) } : { x: sgn(B.x - c.x), y: 0 },
+      corner: c
+    };
+  }
+
+  function arcInto(pts, C, r, a0, a1) {
+    var sweep = a1 - a0;
+    while (sweep >  Math.PI) sweep -= 2 * Math.PI;
+    while (sweep < -Math.PI) sweep += 2 * Math.PI;
+    for (var i = 1; i <= 14; i++) {
+      var a = a0 + sweep * (i / 14);
+      pts.push({ x: C.x + Math.cos(a) * r, y: C.y + Math.sin(a) * r });
+    }
+  }
+  function bendPts(pts, from, corner, to, d1, d2, radius) {
+    var len1 = Math.hypot(corner.x - from.x, corner.y - from.y);
+    var len2 = Math.hypot(to.x - corner.x, to.y - corner.y);
+    var r = Math.max(10, Math.min(radius, len1, len2));
+    var P1 = { x: corner.x - d1.x * r, y: corner.y - d1.y * r };
+    var P2 = { x: corner.x + d2.x * r, y: corner.y + d2.y * r };
+    var C  = { x: P1.x + d2.x * r, y: P1.y + d2.y * r };
+    if (len1 > r) pts.push(P1);
+    arcInto(pts, C, r, Math.atan2(P1.y - C.y, P1.x - C.x), Math.atan2(P2.y - C.y, P2.x - C.x));
+    if (len2 > r) pts.push({ x: to.x, y: to.y });
+  }
+
+  function buildPath(A, B, radius) {
+    var pts = [{ x: A.x, y: A.y }];
+    var L = legDirs(A, B);
+    if (!L.corner) {
+      pts.push({ x: B.x, y: B.y });
+    } else {
+      bendPts(pts, A, L.corner, B, L.d1, L.d2, radius);
+    }
+    var cum = [0], len = 0;
+    for (var k = 1; k < pts.length; k++) {
+      len += Math.hypot(pts[k].x - pts[k - 1].x, pts[k].y - pts[k - 1].y);
+      cum.push(len);
+    }
+    return { pts: pts, cum: cum, len: len, d1: L.d1, d2: L.d2 };
+  }
+
+  function onPath(path, u) {
+    var d = u * path.len, lo = 0, hi = path.cum.length - 1;
+    while (lo < hi - 1) { var m = (lo + hi) >> 1; if (path.cum[m] <= d) lo = m; else hi = m; }
+    var span = path.cum[hi] - path.cum[lo] || 1;
+    var f = (d - path.cum[lo]) / span;
+    var p = path.pts[lo], q = path.pts[hi];
+    return { x: p.x + (q.x - p.x) * f, y: p.y + (q.y - p.y) * f,
+             t: Math.atan2(q.y - p.y, q.x - p.x) };
+  }
+
+  /* ---------- a trip -------------------------------------------------------
+     Headings are carried by the cars themselves rather than looked up, so any
+     jump between digits works, not only the ones the loop makes. A car that
+     would have to reverse out of an off-screen bay turns around first, which
+     nobody sees; on screen it just reverses.
+  ------------------------------------------------------------------------- */
+  function makeTrip(from, to, radius) {
+    var path = buildPath(from, to, radius);
+    var hv = { x: Math.cos(from.a), y: Math.sin(from.a) };
+    var fwd = dotv(hv, path.d1) > 0;
+    var pre = false;
+    if (!fwd && offBand(from)) { pre = true; fwd = true; }
+    return {
+      path: path, fwd: fwd, pre: pre,
+      a0: from.a, aDrive: pre ? norm(from.a + Math.PI) : from.a,
+      a1: norm(angOf(path.d2) + (fwd ? 0 : Math.PI)),
+      from: from, to: to
+    };
+  }
+
+  function tripPose(trip, u) {
+    if (u <= 0) return { x: trip.from.x, y: trip.from.y, a: trip.a0, rev: false };
+    if (u >= 1) return { x: trip.to.x, y: trip.to.y, a: trip.a1, rev: false };
+    var sf = trip.pre ? TUNING.spinFrac : 0;
+    if (u < sf) {
+      return { x: trip.from.x, y: trip.from.y,
+               a: norm(trip.a0 + norm(trip.aDrive - trip.a0) * easeInOut(u / sf)), rev: false };
+    }
+    var v = easeInOut((u - sf) / (1 - sf));
+    var pt = onPath(trip.path, v);
+    var a = trip.fwd ? pt.t : pt.t + Math.PI;
+    if (v > 0.88) a += norm(trip.a1 - a) * ((v - 0.88) / 0.12);
+    return { x: pt.x, y: pt.y, a: norm(a), rev: !trip.fwd, u: v };
+  }
+
+  /* ---------- collision test ---------- */
+  var PLAN_PAD = 7;
+  function box(p, pad) {
+    var ca = Math.cos(p.a), sa = Math.sin(p.a);
+    return { c: p, ax: { x: ca, y: sa }, ay: { x: -sa, y: ca },
+             hl: CL / 2 + pad, hw: CW / 2 + pad };
+  }
+  function hit(A, B) {
+    var d = { x: B.c.x - A.c.x, y: B.c.y - A.c.y }, axes = [A.ax, A.ay, B.ax, B.ay];
+    for (var i = 0; i < 4; i++) {
+      var ax = axes[i];
+      var ra = Math.abs(dotv(A.ax, ax)) * A.hl + Math.abs(dotv(A.ay, ax)) * A.hw;
+      var rb = Math.abs(dotv(B.ax, ax)) * B.hl + Math.abs(dotv(B.ay, ax)) * B.hw;
+      if (Math.abs(dotv(d, ax)) > ra + rb) return false;
+    }
+    return true;
+  }
+
+  /* ---------- where a car parks ---------- */
+  function bayPos(car, value, cyc) {
+    var k = ROUTES[roleOf(car, cyc)][value], b = BAYS[k];
+    if (!b.off) return { x: b.x, y: b.y, vert: b.vert, slot: k };
+    var q = 0;
+    for (var i = 0; i < CARS.length; i++) {
+      if (CARS[i] === car) break;
+      if (ROUTES[roleOf(CARS[i], cyc)][value] === k) q++;
+    }
+    return { x: b.x, y: b.y + b.dir * q * OFF_QUEUE, vert: b.vert, slot: k };
+  }
+
+  /* ---------- planning ---------- */
+  var RADII = [52, 40, 64, 30, 74];
+  var PACE  = [1, 0.87, 1.13, 0.76, 1.26, 0.66, 1.4];
+  var CANDS = [];
+  for (var p_ = 0; p_ < PACE.length; p_++)
+    for (var r_ = 0; r_ < RADII.length; r_++)
+      CANDS.push({ r: RADII[r_], pace: PACE[p_] });
+  var NODE_CAP = 6000;
+
+  function planMove(poses, targets) {
+    var movers = [], statics = [];
+    CARS.forEach(function (c) {
+      if (samePlace(poses[c], targets[c])) statics.push(poses[c]);
+      else movers.push({ car: c, from: poses[c], to: targets[c] });
+    });
+    if (!movers.length) return { movers: [], total: 0, solved: true };
+
+    function durOf(trip, pace) {
+      var d = TUNING.base + (trip.path.len / (TUNING.speed * pace)) * 1000;
+      if (trip.pre) d /= (1 - TUNING.spinFrac);
+      return Math.max(TUNING.minDur, Math.min(TUNING.maxDur, d));
+    }
+    function build(r, cand) {
+      var trip = makeTrip(r.from, r.to, cand.r);
+      return { rec: r, trip: trip, dur: durOf(trip, cand.pace) };
+    }
+    function at(c, t) { return tripPose(c.trip, t / c.dur); }
+
+    var order = movers.slice().sort(function (a, b) {
+      return buildPath(b.from, b.to, 52).len - buildPath(a.from, a.to, 52).len;
+    });
+
+    var nodes = 0;
+    function clashes(cand, done) {
+      var end = done.reduce(function (m, o) { return Math.max(m, o.dur); }, cand.dur) + 60;
+      for (var t = 0; t <= end; t += 18) {
+        var me = at(cand, t), k, o;
+        for (k = 0; k < statics.length; k++) {
+          o = statics[k];
+          if (offBand(me) && offBand(o)) continue;
+          if (hit(box(me, PLAN_PAD), box(o, PLAN_PAD))) return true;
+        }
+        for (k = 0; k < done.length; k++) {
+          o = at(done[k], t);
+          if (offBand(me) && offBand(o)) continue;
+          if (hit(box(me, PLAN_PAD), box(o, PLAN_PAD))) return true;
+        }
+      }
+      return false;
+    }
+
+    var chosen = null;
+    (function dfs(i, done) {
+      if (i === order.length) { chosen = done.slice(); return true; }
+      for (var ci = 0; ci < CANDS.length; ci++) {
+        if (++nodes > NODE_CAP) return false;
+        var cand = build(order[i], CANDS[ci]);
+        if (clashes(cand, done)) continue;
+        done.push(cand);
+        if (dfs(i + 1, done)) return true;
+        done.pop();
+      }
+      return false;
+    })(0, []);
+
+    var solved = !!chosen;
+    if (!chosen) chosen = order.map(function (r) { return build(r, CANDS[0]); });
+    chosen.forEach(function (c) { c.car = c.rec.car; });
+    var total = chosen.reduce(function (m, c) { return Math.max(m, c.dur); }, 0);
+    return { movers: chosen, total: total, solved: solved, nodes: nodes };
+  }
+
+  /* ---------- a digit ---------- */
+  function shuffled(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function makeDigit(index, value) {
+    var d = {
+      index: index, cx: CX[index], value: value, cyc: 0,
+      color: {}, poses: {}, plan: null, t0: 0
+    };
+    var pal = index === 0 ? PALETTE.slice() : shuffled(PALETTE);
+    CARS.forEach(function (c, i) {
+      d.color[c] = pal[i];
+      var b = bayPos(c, value, 0);
+      d.poses[c] = { x: b.x, y: b.y, a: b.vert ? H : 0, vert: b.vert, slot: b.slot };
+    });
+    return d;
+  }
+
+  function setDigit(d, value) {
+    if (value === d.value) return 0;
+    if (value < d.value) d.cyc = (d.cyc + 1) % 6;     // a wrap hands the routes on
+    d.value = value;
+    var targets = {};
+    CARS.forEach(function (c) { targets[c] = bayPos(c, value, d.cyc); });
+    d.plan = planMove(d.poses, targets);
+    d.targets = targets;
+    d.t0 = performance.now();
+    return d.plan.total;
+  }
+
+  /* =========================================================================
+     RENDER
+     ========================================================================= */
+  var canvas = document.getElementById('carclock');
+  var g = canvas.getContext('2d');
+  var view = { s: 1, ox: 0, oy: 0, halfH: 400 };
+  var T = {};
+  var digits = [];
+
+  function readTheme() {
+    var cs = getComputedStyle(canvas);
+    T = {
+      road:  cs.getPropertyValue('--road').trim(),
+      lane:  cs.getPropertyValue('--lane').trim(),
+      line:  cs.getPropertyValue('--lane-line').trim(),
+      man:   cs.getPropertyValue('--manhole').trim(),
+      manIn: cs.getPropertyValue('--manhole-in').trim(),
+      glass: cs.getPropertyValue('--car-glass').trim(),
+      shade: cs.getPropertyValue('--car-shadow').trim()
+    };
+  }
+
+  function resize() {
+    var r = canvas.parentElement.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    canvas.width = Math.round(r.width * dpr);
+    canvas.height = Math.round(r.height * dpr);
+    var pad = 12;
+    view.s = Math.min((r.width - pad * 2) / WORLD_W, (r.height - pad * 2) / (VIEW_H * 2)) * dpr;
+    view.ox = canvas.width / 2;
+    view.oy = canvas.height / 2;
+    view.halfH = (canvas.height / 2) / view.s;
+    draw();
+  }
+
+  function rr(x, y, w, h, rad) {
+    if (g.roundRect) { g.beginPath(); g.roundRect(x, y, w, h, rad); return; }
+    g.beginPath(); g.moveTo(x + rad, y); g.arcTo(x + w, y, x + w, y + h, rad);
+    g.arcTo(x + w, y + h, x, y + h, rad); g.arcTo(x, y + h, x, y, rad);
+    g.arcTo(x, y, x + w, y, rad); g.closePath();
+  }
+  function shade(hex, f) {
+    var n = parseInt(hex.slice(1), 16), r = n >> 16, gg = (n >> 8) & 255, b = n & 255;
+    var m = f < 0 ? 0 : 255, k = Math.abs(f);
+    return 'rgb(' + Math.round(r + (m - r) * k) + ',' + Math.round(gg + (m - gg) * k) + ',' + Math.round(b + (m - b) * k) + ')';
+  }
+
+  function drawRoads() {
+    var top = -view.halfH - 40, bot = view.halfH + 40;
+    g.lineCap = 'butt';
+    for (var i = 0; i < 4; i++) {
+      [-XOFF, XOFF].forEach(function (dx) {
+        var x = CX[i] + dx;
+        g.strokeStyle = T.lane; g.lineWidth = CW + 26;
+        g.beginPath(); g.moveTo(x, top); g.lineTo(x, bot); g.stroke();
+        g.strokeStyle = T.line; g.lineWidth = 1.5; g.setLineDash([10, 15]);
+        g.beginPath(); g.moveTo(x, top); g.lineTo(x, bot); g.stroke();
+        g.setLineDash([]);
+      });
+    }
+    // the colon: two manhole covers set into the road
+    [-MANHOLE_Y, MANHOLE_Y].forEach(function (y) {
+      g.fillStyle = T.man;
+      g.beginPath(); g.arc(0, y, MANHOLE_R, 0, Math.PI * 2); g.fill();
+      g.fillStyle = T.manIn;
+      g.beginPath(); g.arc(0, y, MANHOLE_R - 5.5, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = T.man; g.lineWidth = 1.6;
+      g.beginPath(); g.arc(0, y, MANHOLE_R - 11, 0, Math.PI * 2); g.stroke();
+      for (var k = 0; k < 8; k++) {
+        var a = (k / 8) * Math.PI * 2 + Math.PI / 8;
+        g.beginPath();
+        g.moveTo(Math.cos(a) * (MANHOLE_R - 10), y + Math.sin(a) * (MANHOLE_R - 10));
+        g.lineTo(Math.cos(a) * (MANHOLE_R - 3.5), y + Math.sin(a) * (MANHOLE_R - 3.5));
+        g.stroke();
+      }
+    });
+  }
+
+  function drawCar(col, p, braking) {
+    var fade = Math.min(1, Math.max(0, (VIEW_H - Math.abs(p.y)) / FADE + 1));
+    if (fade <= 0.01) return;
+    g.globalAlpha = Math.min(1, fade);
+    g.save(); g.translate(p.x, p.y); g.rotate(p.a);
+
+    g.fillStyle = T.shade; rr(-CL / 2 + 2, -CW / 2 + 4, CL, CW, 9); g.fill();
+    g.fillStyle = col; rr(-CL / 2, -CW / 2, CL, CW, 9); g.fill();
+    g.strokeStyle = shade(col, -0.42); g.lineWidth = 1.4;
+    rr(-CL / 2, -CW / 2, CL, CW, 9); g.stroke();
+    g.fillStyle = shade(col, -0.22); rr(-CL * 0.24, -CW / 2 + 4, CL * 0.46, CW - 8, 5); g.fill();
+
+    g.fillStyle = T.glass;
+    g.beginPath();
+    g.moveTo(CL * .23, -CW / 2 + 4.4); g.lineTo(CL * .36, -CW / 2 + 7);
+    g.lineTo(CL * .36, CW / 2 - 7);    g.lineTo(CL * .23, CW / 2 - 4.4);
+    g.closePath(); g.fill();
+    g.beginPath();
+    g.moveTo(-CL * .25, -CW / 2 + 4.4); g.lineTo(-CL * .38, -CW / 2 + 7);
+    g.lineTo(-CL * .38, CW / 2 - 7);    g.lineTo(-CL * .25, CW / 2 - 4.4);
+    g.closePath(); g.fill();
+
+    g.fillStyle = '#FFF6DC';
+    g.fillRect(CL / 2 - 4.5, -CW / 2 + 4, 3.2, 6);
+    g.fillRect(CL / 2 - 4.5, CW / 2 - 10, 3.2, 6);
+    g.fillStyle = p.rev ? '#FFFFFF' : (braking ? '#FF5540' : 'rgba(190,58,42,.72)');
+    g.fillRect(-CL / 2 + 1.4, -CW / 2 + 4, 3, 6);
+    g.fillRect(-CL / 2 + 1.4, CW / 2 - 10, 3, 6);
+
+    g.restore();
+    g.globalAlpha = 1;
+  }
+
+  function draw() {
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.fillStyle = T.road || '#EFEDE8';
+    g.fillRect(0, 0, canvas.width, canvas.height);
+    g.setTransform(view.s, 0, 0, view.s, view.ox, view.oy);
+    drawRoads();
+    var now = performance.now();
+    digits.forEach(function (d) {
+      g.save(); g.translate(d.cx, 0);
+      CARS.forEach(function (c) {
+        var p = d.poses[c], braking = false;
+        if (d.plan) {
+          var m = null;
+          for (var i = 0; i < d.plan.movers.length; i++)
+            if (d.plan.movers[i].car === c) { m = d.plan.movers[i]; break; }
+          if (m) {
+            var u = (now - d.t0) / m.dur;
+            p = tripPose(m.trip, u);
+            braking = u > 0.7 && u < 1;
+          }
+        }
+        drawCar(d.color[c], p, braking);
+      });
+      g.restore();
+    });
+  }
+
+  /* ---------- animation ---------- */
+  var raf = 0;
+  function frame() {
+    raf = 0;
+    var now = performance.now(), busy = false;
+    digits.forEach(function (d) {
+      if (!d.plan) return;
+      if (now - d.t0 >= d.plan.total) {
+        d.plan.movers.forEach(function (m) {
+          var t = d.targets[m.car];
+          d.poses[m.car] = { x: t.x, y: t.y, a: m.trip.a1, vert: t.vert, slot: t.slot };
+        });
+        d.plan = null;
+      } else busy = true;
+    });
+    draw();
+    if (busy) raf = requestAnimationFrame(frame);
+  }
+  function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+
+  /* ---------- the clock ---------- */
+  var forced = null;
+  function nowDigits() {
+    if (forced) return forced;
+    var t = new Date(), h = t.getHours(), m = t.getMinutes();
+    return [Math.floor(h / 10), h % 10, Math.floor(m / 10), m % 10];
+  }
+
+  function tick() {
+    var v = nowDigits(), moved = false;
+    for (var i = 0; i < 4; i++) if (v[i] !== digits[i].value) { setDigit(digits[i], v[i]); moved = true; }
+    if (moved) {
+      canvas.setAttribute('aria-label', v[0] + '' + v[1] + ':' + v[2] + v[3]);
+      kick();
+    }
+  }
+
+  /* ---------- boot ---------- */
+  readTheme();
+  var start = nowDigits();
+  for (var i = 0; i < 4; i++) digits.push(makeDigit(i, start[i]));
+  canvas.setAttribute('aria-label', start[0] + '' + start[1] + ':' + start[2] + start[3]);
+  resize();
+  new ResizeObserver(resize).observe(canvas.parentElement);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { readTheme(); draw(); });
+  new MutationObserver(function () { readTheme(); draw(); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  setInterval(tick, 1000);
+
+  window.CarClock = {
+    routes: ROUTES, roleOf: roleOf, tuning: TUNING, bays: BAYS, palette: PALETTE,
+    digits: digits, plan: planMove, bayPos: bayPos, makeTrip: makeTrip,
+    tripPose: tripPose, box: box, hit: hit, offBand: offBand, cars: CARS,
+    setTime: function (a, b) {
+      var d;
+      if (typeof a === 'string') { var m = a.match(/(\d{1,2})\D+(\d{1,2})/); d = [+m[1], +m[2]]; }
+      else d = [a, b];
+      forced = [Math.floor(d[0] / 10) % 10, d[0] % 10, Math.floor(d[1] / 10) % 10, d[1] % 10];
+      tick();
+    },
+    resume: function () { forced = null; tick(); },
+    redraw: draw
+  };
+})();
+</script>
