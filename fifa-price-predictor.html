@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Player Value Predictor</title>
+<style>
+  :root {
+    --bg: #17253c;
+    --panel: #1f3050;
+    --panel-2: #26395c;
+    --line: #33486e;
+    --text: #e2e9f5;
+    --muted: #92a5c4;
+    --accent: #6b9bd8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 20px 80px;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  header { margin-bottom: 32px; }
+  h1 { font-size: 28px; letter-spacing: -0.01em; margin: 0 0 6px; font-weight: 600; }
+  .sub { color: var(--muted); font-size: 15px; margin: 0; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 24px;
+  }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.wide { grid-column: 1 / -1; }
+
+  label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600;
+  }
+  output {
+    font-size: 15px; font-weight: 600; color: var(--text);
+    font-variant-numeric: tabular-nums; text-transform: none; letter-spacing: 0;
+  }
+
+  select {
+    width: 100%; padding: 10px 12px; font-size: 15px; color: var(--text);
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 6px; appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' fill='none' stroke='%2392a5c4' stroke-width='1.6'/></svg>");
+    background-repeat: no-repeat; background-position: right 12px center;
+  }
+  select:focus, input[type=range]:focus, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 22px; background: transparent; cursor: pointer; margin: 0;
+  }
+  input[type=range]::-webkit-slider-runnable-track {
+    height: 4px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; margin-top: -7px;
+    border-radius: 50%; background: var(--accent); border: none;
+  }
+  input[type=range]::-moz-range-track {
+    height: 4px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: none;
+  }
+
+  button {
+    width: 100%; margin-top: 26px; padding: 14px;
+    font-size: 15px; font-weight: 600; letter-spacing: 0.02em;
+    color: #10192a; background: var(--accent);
+    border: none; border-radius: 6px; cursor: pointer;
+  }
+  button:hover { background: #7fabe2; }
+  button:active { background: #5e8ccb; }
+
+  #result { margin-top: 24px; }
+  #result[hidden] { display: none; }
+  .result-card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 28px 24px; text-align: center;
+  }
+  .result-label {
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin-bottom: 8px;
+  }
+  .result-value {
+    font-size: 40px; font-weight: 600; letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums; line-height: 1.1;
+  }
+  .result-note { font-size: 14px; color: var(--muted); margin-top: 10px; }
+
+  section.about { margin-top: 40px; }
+  section.about h2 {
+    font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin: 0 0 12px;
+  }
+  section.about p { margin: 0 0 14px; font-size: 15px; color: #c3d0e4; }
+  section.about p:last-child { margin-bottom: 0; }
+  .stats {
+    display: flex; flex-wrap: wrap; gap: 28px;
+    padding: 16px 0 4px; margin-top: 4px; border-top: 1px solid var(--line);
+  }
+  .stat b {
+    display: block; font-size: 20px; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat span { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Player Value Predictor</h1>
+    <p class="sub">Estimated market value from age, position and six attribute ratings.</p>
+  </header>
+
+  <form class="panel" id="form" autocomplete="off">
+    <div class="grid">
+
+      <div class="field wide">
+        <label for="age">Age<output id="age-out">24</output></label>
+        <input type="range" id="age" min="16" max="40" step="1" value="24">
+      </div>
+
+      <div class="field wide">
+        <label for="position">Position</label>
+        <select id="position">
+            <option value="Striker">Striker</option>
+            <option value="Winger">Winger</option>
+            <option value="Attacking midfield">Attacking midfield</option>
+            <option value="Midfield">Midfield</option>
+            <option value="Defensive midfield">Defensive midfield</option>
+            <option value="Centre back">Centre back</option>
+            <option value="Full back">Full back</option>
+        </select>
+      </div>
+
+        <div class="field">
+          <label for="pace">Pace<output id="pace-out">50</output></label>
+          <input type="range" id="pace" min="1" max="99" step="1" value="50">
+        </div>
+        <div class="field">
+          <label for="shooting">Shooting<output id="shooting-out">50</output></label>
+          <input type="range" id="shooting" min="1" max="99" step="1" value="50">
+        </div>
+        <div class="field">
+          <label for="passing">Passing<output id="passing-out">50</output></label>
+          <input type="range" id="passing" min="1" max="99" step="1" value="50">
+        </div>
+        <div class="field">
+          <label for="dribbling">Dribbling<output id="dribbling-out">50</output></label>
+          <input type="range" id="dribbling" min="1" max="99" step="1" value="50">
+        </div>
+        <div class="field">
+          <label for="defending">Defending<output id="defending-out">50</output></label>
+          <input type="range" id="defending" min="1" max="99" step="1" value="50">
+        </div>
+        <div class="field">
+          <label for="physical">Physical<output id="physical-out">50</output></label>
+          <input type="range" id="physical" min="1" max="99" step="1" value="50">
+        </div>
+
+    </div>
+    <button type="submit">Predict value</button>
+  </form>
+
+  <div id="result" hidden>
+    <div class="result-card">
+      <div class="result-label">Predicted market value</div>
+      <div class="result-value" id="value">—</div>
+      <div class="result-note" id="note"></div>
+    </div>
+  </div>
+
+  <section class="about">
+    <h2>About the model</h2>
+    <p>
+      A ridge regression fitted to 14,106 outfield players from the FIFA player
+      database, using age, playing position and the six summary attribute ratings
+      It predicts the logarithm of market value rather than the value itself, because 
+      the difference between €50k and €100k matters as much proportionally as €50m and €100m.
+    </p>
+    <p>
+      I refined the data in two 2 ways. Age enters the model as a quadratic, since player value
+      peaks in the mid-twenties, which a straight line cannot capture. Also, each attribute
+      contributes seperately depending on position, since defending ability is
+      worth a great deal to a centre back and very little to a striker. Together these
+      lift the fit from an R² of 0.77 to 0.94.
+    </p>
+    <div class="stats">
+      <div class="stat"><b>0.940</b><span>Test R²</span></div>
+      <div class="stat"><b>19%</b><span>Median error</span></div>
+      <div class="stat"><b>11,284</b><span>Training players</span></div>
+      <div class="stat"><b>2,822</b><span>Held-out players</span></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+// ---------------------------------------------------------------------------
+// Fitted model. Ridge(alpha=1.0) on log1p(value_eur), 50-feature design:
+//   [age_z, 6 attribute_z, 6 position dummies, age_z^2, 36 position x attribute]
+// Striker is the dropped reference category. Regenerate with build_site.py.
+// ---------------------------------------------------------------------------
+const MODEL = {
+ "intercept": 11.898422008902863,
+ "coef": [
+  0.0055766894859435165,
+  0.08795781274639146,
+  1.5362014661154537,
+  0.09559907430384991,
+  0.41066256365566295,
+  0.07875186577876193,
+  0.18644450628479725,
+  0.3134016549533021,
+  0.24818077154357107,
+  0.11952514828791813,
+  -0.4017047224850476,
+  -0.849144381606682,
+  -0.5950332836573782,
+  -0.21128742483419533,
+  0.1512605732344139,
+  -1.333670712117057,
+  0.6890743968360349,
+  0.34886401066613615,
+  -0.07142545822910844,
+  -0.09245989560453774,
+  -0.014168332682767942,
+  -0.9650651462162764,
+  0.6345454762902505,
+  0.2715529771960288,
+  -0.0405084142958493,
+  -0.1365997156021589,
+  0.010186799343889805,
+  -1.4521297905815138,
+  0.8526354028479309,
+  0.09458521402905597,
+  0.3543470309614504,
+  -0.03893975706909136,
+  -0.07259373852455614,
+  -1.6150207701218997,
+  0.712413403210768,
+  -0.21946928934399956,
+  1.1414400567636316,
+  0.15430193920300403,
+  -0.07784608234651703,
+  -1.5197069410177928,
+  0.031808775589716794,
+  -0.3511161880001904,
+  2.0347919548942213,
+  0.15230075943442137,
+  0.07669979224996813,
+  -1.52364825054549,
+  0.20743438271691417,
+  -0.24951973763610708,
+  1.7071351810161859,
+  0.005546089896799995
+ ],
+ "featureNames": [
+  "age",
+  "pace",
+  "shooting",
+  "passing",
+  "dribbling",
+  "defending",
+  "physical",
+  "position_Winger",
+  "position_Attacking midfield",
+  "position_Midfield",
+  "position_Defensive midfield",
+  "position_Centre back",
+  "position_Full back",
+  "age_sq",
+  "position_Winger:pace",
+  "position_Winger:shooting",
+  "position_Winger:passing",
+  "position_Winger:dribbling",
+  "position_Winger:defending",
+  "position_Winger:physical",
+  "position_Attacking midfield:pace",
+  "position_Attacking midfield:shooting",
+  "position_Attacking midfield:passing",
+  "position_Attacking midfield:dribbling",
+  "position_Attacking midfield:defending",
+  "position_Attacking midfield:physical",
+  "position_Midfield:pace",
+  "position_Midfield:shooting",
+  "position_Midfield:passing",
+  "position_Midfield:dribbling",
+  "position_Midfield:defending",
+  "position_Midfield:physical",
+  "position_Defensive midfield:pace",
+  "position_Defensive midfield:shooting",
+  "position_Defensive midfield:passing",
+  "position_Defensive midfield:dribbling",
+  "position_Defensive midfield:defending",
+  "position_Defensive midfield:physical",
+  "position_Centre back:pace",
+  "position_Centre back:shooting",
+  "position_Centre back:passing",
+  "position_Centre back:dribbling",
+  "position_Centre back:defending",
+  "position_Centre back:physical",
+  "position_Full back:pace",
+  "position_Full back:shooting",
+  "position_Full back:passing",
+  "position_Full back:dribbling",
+  "position_Full back:defending",
+  "position_Full back:physical"
+ ],
+ "mean": {
+  "age": 24.5388160227,
+  "pace": 68.1243353421,
+  "shooting": 51.6088266572,
+  "passing": 55.6162708259,
+  "dribbling": 60.5878234669,
+  "defending": 49.7564693371,
+  "physical": 64.4825416519
+ },
+ "scale": {
+  "age": 4.4180071908,
+  "pace": 10.8638514406,
+  "shooting": 13.4535494832,
+  "passing": 10.7488590059,
+  "dribbling": 10.7497473938,
+  "defending": 15.7612368769,
+  "physical": 9.7195317883
+ },
+ "attributes": [
+  "pace",
+  "shooting",
+  "passing",
+  "dribbling",
+  "defending",
+  "physical"
+ ],
+ "roles": [
+  "Striker",
+  "Winger",
+  "Attacking midfield",
+  "Midfield",
+  "Defensive midfield",
+  "Centre back",
+  "Full back"
+ ],
+ "metrics": {
+  "r2_log": 0.9402300633340192,
+  "n_train": 11284,
+  "n_test": 2822,
+  "n_total": 14106,
+  "mae_eur": 270159.5600017099,
+  "median_ape": 19.182355250044157
+ }
+};
+
+const ATTRS = MODEL.attributes;
+const DUMMY_ROLES = MODEL.roles.slice(1);   // Striker is the reference
+
+function designVector(input) {
+  const z = {};
+  z.age = (input.age - MODEL.mean.age) / MODEL.scale.age;
+  for (const a of ATTRS) z[a] = (input[a] - MODEL.mean[a]) / MODEL.scale[a];
+
+  const dummies = DUMMY_ROLES.map(r => input.position === r ? 1 : 0);
+
+  const x = [z.age, ...ATTRS.map(a => z[a]), ...dummies, z.age * z.age];
+  for (let i = 0; i < DUMMY_ROLES.length; i++) {
+    for (const a of ATTRS) x.push(dummies[i] * z[a]);
+  }
+  return x;
+}
+
+function predictEur(input) {
+  const x = designVector(input);
+  if (x.length !== MODEL.coef.length) throw new Error("feature length mismatch");
+  let logv = MODEL.intercept;
+  for (let i = 0; i < x.length; i++) logv += MODEL.coef[i] * x[i];
+  return Math.expm1(logv);
+}
+
+function formatEur(v) {
+  if (!isFinite(v) || v < 0) v = 0;
+  if (v >= 1e6) return "€" + (v / 1e6).toFixed(2).replace(/\.?0+$/, "") + "m";
+  if (v >= 1e3) return "€" + Math.round(v / 1e3) + "k";
+  return "€" + Math.round(v).toLocaleString("en-GB");
+}
+
+// --- live slider readouts --------------------------------------------------
+for (const id of ["age", ...ATTRS]) {
+  const slider = document.getElementById(id);
+  const out = document.getElementById(id + "-out");
+  const sync = () => { out.textContent = slider.value; };
+  slider.addEventListener("input", sync);
+  sync();
+}
+
+// --- submit ----------------------------------------------------------------
+document.getElementById("form").addEventListener("submit", e => {
+  e.preventDefault();
+  const input = {
+    age: +document.getElementById("age").value,
+    position: document.getElementById("position").value,
+  };
+  for (const a of ATTRS) input[a] = +document.getElementById(a).value;
+
+  const eur = predictEur(input);
+  document.getElementById("value").textContent = formatEur(eur);
+  document.getElementById("note").textContent =
+    input.position + ", age " + input.age +
+    " · typical error around " + Math.round(MODEL.metrics.median_ape) + "%";
+  const box = document.getElementById("result");
+  box.hidden = false;
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+</script>
+</body>
+</html>
