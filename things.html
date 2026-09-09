@@ -51,6 +51,10 @@
     --g-ink:#374151; --g-soft:#6b7280; --g-hair:#d1d5db; --g-accent:#059669;
     --r-bg:#A9431F; --r-lift:#BC5330; --r-deep:#8E3617;
     --r-ink:#ffffff; --r-muted:rgba(255,255,255,.66); --r-line:rgba(255,255,255,.24);
+    /* fifa price predictor — the four blues from the tool itself, plus two
+       lighter steps of the same hue for type and marks */
+    --f-bg:#17253c; --f-panel:#1f3050; --f-panel-2:#26395c; --f-line:#33486e;
+    --f-ink:#E7EDF8; --f-muted:#93A7C7;
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -87,7 +91,9 @@
   }
 
   .rack{
-    flex:1 1 auto;display:grid;grid-template-columns:1fr 2fr 1fr;
+    flex:1 1 auto;display:grid;
+    grid-template-columns:1fr 2fr 1fr;
+    grid-template-rows:minmax(0,1fr);   /* the viewport decides, not the content */
     gap:clamp(10px,1.4vw,18px);min-height:0;
   }
 
@@ -98,10 +104,18 @@
     opacity:0;transform:translateY(14px);
     animation:settle .62s cubic-bezier(.22,.7,.3,1) forwards;
   }
-  .panel:nth-child(1){animation-delay:.04s}
-  .panel:nth-child(2){animation-delay:.14s}
-  .panel:nth-child(3){animation-delay:.24s}
+  .d1{animation-delay:.04s} .d2{animation-delay:.13s}
+  .d3{animation-delay:.20s} .d4{animation-delay:.27s}
   @keyframes settle{to{opacity:1;transform:none}}
+
+  /* the middle column: clock over the price model, two to one */
+  .mid{
+    display:grid;
+    /* minmax(0,·) so the price model's own content can never push the whole
+       rack taller than the viewport on a short window */
+    grid-template-rows:minmax(0,2fr) minmax(0,1fr);
+    gap:clamp(10px,1.4vw,18px);min-height:0;
+  }
   .panel:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 
   .p-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
@@ -131,7 +145,9 @@
   }
   .p--games .p-arrow{color:var(--g-soft)}
   .grid5{
-    display:grid;grid-template-columns:repeat(5,1fr);width:min(100%,180px);aspect-ratio:1;
+    display:grid;grid-template-columns:repeat(5,1fr);
+    /* square, and bounded by whichever of the two axes runs out first */
+    aspect-ratio:1;width:auto;height:100%;max-height:180px;max-width:100%;
     border:1.5px solid var(--g-ink);background:var(--g-ink);gap:1.5px;
   }
   .grid5 i{background:var(--g-1)}
@@ -165,19 +181,78 @@
     border:1px solid var(--hair);
     padding:0;display:block;
   }
-  #carclock{display:block;width:100%;height:100%}
+  /* absolute so the canvas never feeds its own intrinsic size back into the
+     grid — the row decides the height, the canvas just fills it */
+  #carclock{position:absolute;inset:0;display:block;width:100%;height:100%}
 
+  /* ---------- panel: FIFA price predictor ---------- */
+  .p--fifa{
+    flex-direction:row;align-items:center;justify-content:space-between;
+    gap:clamp(16px,2vw,32px);
+    padding:clamp(16px,1.8vw,28px);
+    background:var(--f-bg);
+    border:1px solid var(--f-line);
+    transition:background-color .4s ease;
+    /* the grid gives this panel its height; without size containment its own
+       content would push the rack past the viewport on a short window */
+    contain:size;
+  }
+  .p--fifa:hover,.p--fifa:focus-visible{background:var(--f-panel)}
+  .p--fifa .p-label{color:var(--f-muted);letter-spacing:.2em}
+  .p--fifa .p-name{color:var(--f-ink);font-size:clamp(19px,2.1vw,30px)}
+  .p--fifa .p-domain{color:var(--f-muted);margin-top:0}
+  /* a wide bar reads better with the arrow trailing the line than pinned to a
+     far corner, so this one sits at the end rather than top-right */
+  .p--fifa .p-arrow{color:var(--f-muted);flex:none;align-self:center}
+  .f-text{display:flex;flex-direction:column;gap:7px;min-width:0;flex:1 1 auto}
+  .f-mark{
+    flex:none;display:block;
+    width:clamp(96px,19vw,196px);height:auto;max-height:100%;
+  }
+
+  /* ---------- stacked: puzzle on top, clock, recipes ----------
+     Everything is sized to the viewport so the page never scrolls. The clock
+     row takes the height its four digits actually need at this width — any
+     taller and it only letterboxes — and the two link panels share the rest. */
   @media (max-width:860px){
+    .frame{
+      height:100dvh;overflow:hidden;
+      gap:clamp(10px,1.6vh,16px);
+      padding:clamp(12px,3.2vw,20px);
+    }
+    .wordmark{font-size:clamp(30px,8.5vw,44px)}
     .rack{
       grid-template-columns:1fr;
-      grid-template-rows:minmax(240px,1fr) minmax(200px,.8fr) minmax(240px,1fr);
+      /* the middle row carries the clock and the price model together */
+      grid-template-rows:minmax(170px,1fr) minmax(180px,min(44vh,72vw)) minmax(140px,1fr);
+      gap:clamp(8px,1.2vh,12px);
     }
-    .p-mark{padding:14px 0}
-    .grid5,.stack{width:min(100%,150px)}
+    .mid{gap:clamp(8px,1.2vh,12px)}
+    .panel{padding:14px 16px;gap:10px}
+    .p--fifa{padding:12px 14px;gap:11px}
+    .p--fifa .p-name{font-size:clamp(17px,4.6vw,23px)}
+    .f-text{gap:5px}
+    .f-mark{width:clamp(78px,22vw,120px)}
+    .p-mark{padding:2px 0;overflow:hidden}
+    .grid5{max-height:132px}
+    .stack{width:min(100%,168px);gap:clamp(8px,1.5vh,15px)}
+    .p-label{font-size:10px;letter-spacing:.18em}
+    .p-name{font-size:clamp(20px,5.6vw,27px)}
+    .p-domain{margin-top:5px;font-size:11px}
   }
   @media (max-width:460px){
-    .masthead{flex-direction:column;align-items:flex-start;gap:6px}
-    .byline{padding-bottom:0}
+    .masthead{flex-direction:column;align-items:flex-start;gap:5px}
+    .byline{padding-bottom:0;font-size:11px}
+  }
+  /* short phones: show a shorter ingredient list rather than a clipped one */
+  @media (max-width:860px) and (max-height:720px){
+    .stack span:nth-child(n+3){display:none}
+  }
+  /* a phone on its side has no height to give away — let it scroll instead */
+  @media (max-width:860px) and (max-height:520px){
+    .frame{height:auto;min-height:100dvh;overflow:visible}
+    .rack{grid-template-rows:minmax(190px,auto) min(78vh,50vw) minmax(190px,auto)}
+    .p--fifa .p-domain{display:none}
   }
   @media (prefers-reduced-motion:reduce){
     .panel{animation:none;opacity:1;transform:none}
@@ -193,7 +268,7 @@
 
   <div class="rack">
 
-    <a class="panel p--games" href="https://sandys.games" target="_blank" rel="noopener">
+    <a class="panel p--games d1" href="https://sandys.games" target="_blank" rel="noopener">
       <div class="p-top">
         <span class="p-label">Daily puzzle</span>
         <span class="p-arrow" aria-hidden="true">&#8599;</span>
@@ -213,11 +288,38 @@
       </div>
     </a>
 
-    <div class="panel p--clock">
-      <canvas id="carclock" role="img" aria-label="Clock"></canvas>
+    <div class="mid">
+      <div class="panel p--clock d2">
+        <canvas id="carclock" role="img" aria-label="Clock"></canvas>
+      </div>
+
+      <a class="panel p--fifa d3" href="https://alexandermulcahy.xyz/fifa-price-predictor"
+         target="_blank" rel="noopener">
+        <div class="f-text">
+          <span class="p-label">Price model</span>
+          <span class="p-name">FIFA Price Predictor</span>
+          <span class="p-domain">alexandermulcahy.xyz</span>
+        </div>
+        <svg class="f-mark" viewBox="0 0 150 88" aria-hidden="true">
+          <rect x="0.7" y="0.7" width="148.6" height="86.6" rx="4"
+                fill="var(--f-panel)" stroke="var(--f-line)" stroke-width="1.4"/>
+          <path d="M16 72 H136 M16 72 V14" stroke="var(--f-line)" stroke-width="1.2" fill="none"/>
+          <path d="M18 70 L134 17" stroke="var(--f-ink)" stroke-width="1.6"
+                fill="none" stroke-linecap="round"/>
+          <g fill="var(--f-muted)">
+            <circle cx="27"  cy="64" r="2.6"/><circle cx="38" cy="67" r="2.6"/>
+            <circle cx="46"  cy="57" r="2.6"/><circle cx="57" cy="59" r="2.6"/>
+            <circle cx="64"  cy="48" r="2.6"/><circle cx="75" cy="47" r="2.6"/>
+            <circle cx="83"  cy="52" r="2.6"/><circle cx="93" cy="37" r="2.6"/>
+            <circle cx="103" cy="40" r="2.6"/><circle cx="112" cy="28" r="2.6"/>
+            <circle cx="124" cy="25" r="2.6"/>
+          </g>
+        </svg>
+        <span class="p-arrow" aria-hidden="true">&#8599;</span>
+      </a>
     </div>
 
-    <a class="panel p--recipes" href="https://recipetap.food" target="_blank" rel="noopener">
+    <a class="panel p--recipes d4" href="https://recipetap.food" target="_blank" rel="noopener">
       <div class="p-top">
         <span class="p-label">Recipes</span>
         <span class="p-arrow" aria-hidden="true">&#8599;</span>
@@ -363,32 +465,64 @@
       pts.push({ x: C.x + Math.cos(a) * r, y: C.y + Math.sin(a) * r });
     }
   }
-  function bendPts(pts, from, corner, to, d1, d2, radius) {
-    var len1 = Math.hypot(corner.x - from.x, corner.y - from.y);
-    var len2 = Math.hypot(to.x - corner.x, to.y - corner.y);
-    var r = Math.max(10, Math.min(radius, len1, len2));
-    var P1 = { x: corner.x - d1.x * r, y: corner.y - d1.y * r };
-    var P2 = { x: corner.x + d2.x * r, y: corner.y + d2.y * r };
-    var C  = { x: P1.x + d2.x * r, y: P1.y + d2.y * r };
-    if (len1 > r) pts.push(P1);
+  // one quarter circle at a corner, joining a run in direction din to one in dout
+  function bend(pts, corner, din, dout, r) {
+    var P1 = { x: corner.x - din.x * r,  y: corner.y - din.y * r };
+    var P2 = { x: corner.x + dout.x * r, y: corner.y + dout.y * r };
+    var C  = { x: P1.x + dout.x * r,     y: P1.y + dout.y * r };
+    pts.push(P1);
     arcInto(pts, C, r, Math.atan2(P1.y - C.y, P1.x - C.x), Math.atan2(P2.y - C.y, P2.x - C.x));
-    if (len2 > r) pts.push({ x: to.x, y: to.y });
+    return P2;
   }
 
   function buildPath(A, B, radius) {
-    var pts = [{ x: A.x, y: A.y }];
-    var L = legDirs(A, B);
-    if (!L.corner) {
+    var pts = [{ x: A.x, y: A.y }], d1, d2;
+    var sameAxis = A.vert === B.vert;
+    var offset = sameAxis && (A.vert ? Math.abs(A.x - B.x) > .5 : Math.abs(A.y - B.y) > .5);
+
+    if (sameAxis && !offset) {                     // one straight run down the lane
+      var L0 = legDirs(A, B);
+      d1 = d2 = L0.d1;
       pts.push({ x: B.x, y: B.y });
+
+    } else if (!sameAxis) {                        // straight, quarter circle, straight
+      var L = legDirs(A, B);
+      d1 = L.d1; d2 = L.d2;
+      var len1 = Math.hypot(L.corner.x - A.x, L.corner.y - A.y);
+      var len2 = Math.hypot(B.x - L.corner.x, B.y - L.corner.y);
+      var r1 = Math.max(10, Math.min(radius, len1, len2));
+      bend(pts, L.corner, d1, d2, r1);
+      pts.push({ x: B.x, y: B.y });
+
     } else {
-      bendPts(pts, A, L.corner, B, L.d1, L.d2, radius);
+      // Two bays on the same axis but different lines — only reachable on a
+      // jump the running clock never makes (a tab waking after hours, say).
+      // Cross over beyond both bays, so two quarter circles and three straights.
+      var uA = A.vert ? { x: 0, y: 1 } : { x: 1, y: 0 };   // along the bay
+      var uC = A.vert ? { x: 1, y: 0 } : { x: 0, y: 1 };   // across to the other line
+      var aA = A.vert ? A.y : A.x, aB = B.vert ? B.y : B.x;
+      var cA = A.vert ? A.x : A.y, cB = B.vert ? B.x : B.y;
+      var need = radius + 8;
+      var m = (aA + aB) / 2 >= 0 ? Math.max(aA, aB) + need : Math.min(aA, aB) - need;
+      var r2 = Math.max(10, Math.min(radius, Math.abs(cA - cB) / 2,
+                                     Math.abs(m - aA), Math.abs(m - aB)));
+      var s1 = sgn(m - aA) || 1, s2 = sgn(aB - m) || 1, sc = sgn(cB - cA) || 1;
+      d1 = { x: uA.x * s1, y: uA.y * s1 };
+      var dm = { x: uC.x * sc, y: uC.y * sc };
+      d2 = { x: uA.x * s2, y: uA.y * s2 };
+      var k1 = A.vert ? { x: A.x, y: m } : { x: m, y: A.y };
+      var k2 = A.vert ? { x: B.x, y: m } : { x: m, y: B.y };
+      bend(pts, k1, d1, dm, r2);
+      bend(pts, k2, dm, d2, r2);
+      pts.push({ x: B.x, y: B.y });
     }
+
     var cum = [0], len = 0;
     for (var k = 1; k < pts.length; k++) {
       len += Math.hypot(pts[k].x - pts[k - 1].x, pts[k].y - pts[k - 1].y);
       cum.push(len);
     }
-    return { pts: pts, cum: cum, len: len, d1: L.d1, d2: L.d2 };
+    return { pts: pts, cum: cum, len: len, d1: d1, d2: d2 };
   }
 
   function onPath(path, u) {
@@ -568,7 +702,19 @@
     d.value = value;
     var targets = {};
     CARS.forEach(function (c) { targets[c] = bayPos(c, value, d.cyc); });
-    d.plan = planMove(d.poses, targets);
+    var pl = planMove(d.poses, targets);
+    if (!pl.solved) {
+      // No safe set of paths — only possible on a jump the clock doesn't make
+      // (a tab waking hours later). Put the cars straight into place rather
+      // than drive something that would collide.
+      CARS.forEach(function (c) {
+        var t = targets[c];
+        d.poses[c] = { x: t.x, y: t.y, a: t.vert ? H : 0, vert: t.vert, slot: t.slot };
+      });
+      d.plan = null;
+      return 0;
+    }
+    d.plan = pl;
     d.targets = targets;
     d.t0 = performance.now();
     return d.plan.total;
